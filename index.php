@@ -6,13 +6,7 @@
         <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div id="header">
-            <img src="img/flower_power_logo_black.png" id="logo"></img>
-            <div id="ui">
-                <a class="button">Contact</a>
-                <a class="button">Login</a>
-            </div>
-        </div>
+        <?php include "php/header.php" ?>
         <div id="main-container">
             <div id="intro">
                     <div class="block-50">
@@ -25,8 +19,6 @@
                 </div>
             </div>
         </div>
-        <div id="footer">
-            <p>Flower Power 2021</p>
-        </div>
+        <?php include 'php/footer.php'; ?>
     </body>
 </html>
