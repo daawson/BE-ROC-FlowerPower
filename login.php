@@ -13,7 +13,13 @@
         <div id="main-container" class="block-full">
             <div class="block-50">
                 <form id="loginForm" action="php/login_check.php" method="POST">
-                    Email<input type="email" name="email" id="email" required><br>
+
+                    <?php 
+                        if(isset($_GET['msg']))
+                            echo "<p>".$_GET['msg']."</p>";
+                    ?>
+
+                    Email<input type="email" name="email" id="email" required <?php if(isset($_GET['login'])) echo $_GET['login']; ?>)><br>
                     Wachtwoord<input type="password" name="password" id="password" required><br>
                     <input type="submit" name="Submit" value="Login">
                    

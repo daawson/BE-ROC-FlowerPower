@@ -12,7 +12,7 @@
         // Return if fields were empty.
         if (empty($email) || empty($password)) 
         {
-            header("location: ../login.php");
+            header("location: ../login.php?msg=Beide velden zijn verplicht!");
             exit();
         }   
         else    
@@ -44,10 +44,14 @@
                         exit();
                     }
                 }
+                else{
+                    header("location: ../login.php?msg=Ongeldige gebruikersnaam of wachtwoord!");
+                    exit();
+                }
             } 
             else 
             {
-                header("location: ../login.php");
+                header("location: ../login.php?msg=Ongeldige gebruikersnaam of wachtwoord!");
                 exit();                
             }
         }
