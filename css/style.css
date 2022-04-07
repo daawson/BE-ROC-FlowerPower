@@ -220,7 +220,13 @@ b{
 
 
 /*#endregion */
-
+/* #region User data */
+#userdata{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+/* #endregion */
 /*#endregion*/
 
 /*#region Footer */

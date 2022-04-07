@@ -7,7 +7,7 @@
         <div id="ui">
             <a class="button">Contact</a>
             <?php 
-                if(isset($_SESSION) && $_SESSION['logged_in'] == true){
+                if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true){
                     echo '<a href="userpage.php" class="button">Mijn Profiel</a>';
                     echo '<a href="php/logout.php"class="button">Log uit</a>';
                 }

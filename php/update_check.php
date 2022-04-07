@@ -6,15 +6,16 @@
         // Get all data
 
         $email = $_POST['email'];
-        $password = $_POST['password'];
         $name = $_POST['name'];
         $surname = $_POST['surname'];
         $adress = $_POST['adress'];
         $postcode = $_POST['postcode'];
         $phone = $_POST['phone'];
 
-        $userdata = array($email, $password, $name, $surname, $adress, $postcode, $phone, "klant");
+        $userid = $_POST['user_id'];
 
-        $db->registerUser($userdata);
+        $userdata = array($email, $name, $surname, $adress, $postcode, $phone, $userid);
+
+        $db->updateUserData($userdata);
     }
 ?>
