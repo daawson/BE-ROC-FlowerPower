@@ -19,8 +19,7 @@ html{
 
 body{
     width: 80%;
-    height: 100%;
-    margin: 0;    
+    height: auto;
     background-color: white;
     box-shadow: black 0px 0px 1px 1px
 }
@@ -51,7 +50,7 @@ b{
 /*#region Header */
 #header{
     width: 100%;
-    height: 10%;
+    height: 100px;
     background-color: #8ABB3F;
     display: flex;
     justify-content: space-evenly;
@@ -94,16 +93,19 @@ b{
 #main-container{
     width: 100%;
     /* height: 85%; */
+    /* display: flex; */
     background-color: #FCFFFC;
 }
 
 #intro{
+    min-height: 100px;
+    overflow: hidden;
     display: flex;
     padding: 20px;
     justify-content: space-evenly;
 }
 
-.block-50{
+.block-25{
     display: flex;
     flex-direction: column;
     padding: 50px;
@@ -123,6 +125,14 @@ b{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.flex-dir-col{
+    flex-direction: column;
+}
+
+.flex-top-down{
+    justify-content: flex-start;
 }
 
 .block-to-left{
@@ -155,6 +165,80 @@ b{
 .round-img{
     border-radius: 50%;
 }
+/* #endregion */
+
+/*#region Artikelen  */
+#article_display{
+    min-height: 100px;
+    overflow: hidden;   
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.article-box{
+    padding: 10px;
+    margin: 10px;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    background-color: #9d999e;
+    border-radius: 2% 2%;
+}
+
+.article-box img{
+    border-radius: 25%;
+    padding: 10px;
+}
+
+.article-name{
+    font-weight: 500;
+}
+
+.article-desc{
+    font-weight: 300;
+}
+
+.article-price{
+    width: 100%;
+    font-weight: 500;
+    text-align: center;
+}
+
+.article-redirect{
+    width: 100%;
+    background-color: white;
+    text-align: center;
+}
+
+.article-redirect:hover{
+    cursor: pointer;
+}
+
+/*#endregion */
+/*#region Article page */
+#article-container{
+    display: flex;
+    /* width: 100%; */
+    height: 85%;
+}
+
+.cart-button{
+    width: 50%;
+    height: 50px;
+    background-color: rgb(222, 217, 217);
+    margin-top: 50px;
+    justify-self: flex-end;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-button:hover{
+    cursor: pointer;
+}
+/*#endregion  */
 
 /*#region Login Form */
 #loginForm{
@@ -220,15 +304,27 @@ b{
 
 
 /*#endregion */
-/* #region User data */
-#userdata{
+
+/*#region User data */
+#userdata-table{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
-/* #endregion */
+
+#userdata-table input{
+    height: 30px;
+}
 /*#endregion*/
 
+
+.spacer{
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #8ABB3F;
+}
 /*#region Footer */
 #footer{
     width: 100%;
@@ -237,6 +333,7 @@ b{
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: flex-end;
 }
 
 /*#endregion*/

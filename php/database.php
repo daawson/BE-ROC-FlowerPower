@@ -1,11 +1,6 @@
 <?php
 class Database
 {
-    private $host = 'localhost';
-    private $port = '3306';
-    private $user = 'root';
-    private $pass = '';
-    private $db = 'flowerpower';
     public $dbh;
 
     function __construct() {
@@ -115,14 +110,14 @@ class Database
         $stmt->execute();
         $userdata = $stmt->fetch();
 
-        echo "<form id='userdata' class='userdata' action='php/update_check.php' method='POST'>";
-            echo "<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='name' id='name' required value='".$userdata['user_name']."'>";
-            echo "<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='surname' id='surname' required value='".$userdata['user_surname']."'>";
-            echo "<input min-length='6' max-length='64' pattern='^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$' type='email' name='email' id='email' required value='".$userdata['user_email']."'>";
-            echo "<input min-length='8' pattern='(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)' type='text' name='phone' id='phone' required value='".$userdata['user_phone']."'>";
-            echo "<br>Bezorg details<br>";
-            echo "<input min-length='4' max-length='128' pattern='^([1-9][e][\s])*([a-zA-Z]+(([\.][\s])|([\s]))?)+[1-9][0-9]*(([-][1-9][0-9]*)|([\s]?[a-zA-Z]+))?$' type='text' name='adress' id='adress' required value='".$userdata['user_adress']."'>";
-            echo "<input max-length='7' placeholder='1234 AB' pattern='^([0-9]{4}[ ]+[a-zA-Z]{2})$' type='text' name='postcode' id='postcode' required value='".$userdata['user_postcode']."'>";
+        echo "<form id='userdata-table' class='userdata' action='php/update_check.php' method='POST'>";
+            echo "Naam<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='name' id='name' required value='".$userdata['user_name']."'>";
+            echo "Achternaam<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='surname' id='surname' required value='".$userdata['user_surname']."'>";
+            echo "E-Mail<input min-length='6' max-length='64' pattern='^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$' type='email' name='email' id='email' required value='".$userdata['user_email']."'>";
+            echo "Telefoonnummer<input min-length='8' pattern='(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)' type='text' name='phone' id='phone' required value='".$userdata['user_phone']."'>";
+            echo "<br><p>Bezorg details</p><br>";
+            echo "Adress<input min-length='4' max-length='128' pattern='^([1-9][e][\s])*([a-zA-Z]+(([\.][\s])|([\s]))?)+[1-9][0-9]*(([-][1-9][0-9]*)|([\s]?[a-zA-Z]+))?$' type='text' name='adress' id='adress' required value='".$userdata['user_adress']."'>";
+            echo "Postcode<input max-length='7' placeholder='1234 AB' pattern='^([0-9]{4}[ ]+[a-zA-Z]{2})$' type='text' name='postcode' id='postcode' required value='".$userdata['user_postcode']."'>";
             echo "<input type='hidden' id='user_id' name='user_id' value='".$_SESSION['user_id']."'>";
             echo "<input type='submit' name='Submit' value='Opslaan'>";
         echo "</form>";
@@ -134,6 +129,73 @@ class Database
             header("location: ../userpage.php?msg=Uw gegevens zijn opgeslagen!");
         }
         //header("location: ../userpage.php?msg=Uw gegevens zijn opgeslagen!");
+    }
+
+    function getArticlesDisplay(){
+        $stmt = $this->dbh->prepare("SELECT * FROM article");
+        $stmt->execute();
+        $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(sizeof($articles) == 0)
+        {
+            echo "<p>We hebben geen artikelen</p>";
+        }
+        else
+        {
+            foreach($articles as $article){
+                echo "<div class='article-box'>";
+                echo "<img src='".$article['article_photoDir']."'>";
+                echo "<p class='article-name'>".$article['article_name']."</p>";                
+                echo "<p class='article-desc'>".$article['article_desc']."</p>";
+                echo "<p class='article-price'>€".$article['article_price']."</p>";
+                echo "<div onclick=\"location.href='article.php?id=".$article['article_id']."'\" class='article-redirect'>Bekijk</div>";
+                echo "</div>";
+            }
+        }
+    }
+
+    function getArticlesList(){
+        $stmt = $this->dbh->prepare("SELECT * FROM article");
+        $stmt->execute();
+        $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($articles as $article){
+            echo "<div class='table-item'>";
+            echo "<div class='table-cell'>".$article['article_id'].'</div>';           
+            echo "<div class='table-cell'>". $article['article_name'] ."</div>"; 
+            // echo "<div class='table-cell'>". $article['article_desc'] ."</div>"; 
+            echo "<div class='table-cell'>". $article['article_category'] ."</div>"; 
+            echo "<div class='table-cell'>". $article['article_tags'] ."</div>"; 
+            echo "<div class='table-cell'>". $article['article_price'] ."</div>";     
+            echo "<div class='table-cell'>". $article['article_stock'] ."</div>";        
+            echo "<div class='table-cell'><b><a href='#'>Aanpassen</a></b></div>";
+            echo "</div>";
+        }
+    }
+
+    function getArticle($id){
+        $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
+        $stmt->bindParam(':uid', $id, PDO::PARAM_STR);                                
+        $stmt->execute();
+        $article = $stmt->fetch();
+
+        return $article;
+    }
+
+    function getUserList(){
+        $stmt = $this->dbh->prepare("SELECT * FROM user");
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($users as $user){
+            echo "<div class='table-item'>";
+            echo "<div class='table-cell'>".$user['user_id'].'</div>';   
+            echo "<div class='table-cell'>".$user['user_name'].'</div>';  
+            echo "<div class='table-cell'>".$user['user_surname'].'</div>';  
+            echo "<div class='table-cell'>".$user['user_type'].'</div>';     
+            echo "<div class='table-cell'><b><a href='#'>Aanpassen</a></b></div>";
+            echo "</div>";
+        
+        }
     }
 }   
 

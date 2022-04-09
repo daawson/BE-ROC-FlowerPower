@@ -13,6 +13,10 @@
                     <p>Lorem Ipsum dolor sit amet</p>
                 </div>
             </div>
+            <div class="spacer"><h2>Onze assortiment</h2></div>
+            <div id="article_display">
+                <?php $db->getArticlesDisplay() ?>
+            </div>
         </div>
         <?php include 'php/footer.php'; ?>
     </body>
