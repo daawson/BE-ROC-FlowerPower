@@ -6,12 +6,14 @@
             if(isset($_SESSION) && $_SESSION["logged_in"] !== true){
                 header("location: index.php");
             }
+            $admin = 0;
+            if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == "administrator") $admin = 1;
             
         ?>
 
         <div id="main-container">
             <div class="block-to-left">
-                <p>Welcome <?php echo $_SESSION['user_name'] ?>! </p>
+                <p>Welkom <?php echo $_SESSION['user_name'] ?>! </p>
                 <?php if(isset($_GET['msg'])) echo "<p>".$_GET['msg']."</p>" ?>
                 <div id="tabs-holder">
                     <div id="tabs">
@@ -19,7 +21,8 @@
                         <a class="button tab-b" onclick="openTab('userdata')">Gegevens</a>
 
                         <?php if($_SESSION['user_level'] == "administrator"){ ?>
-                            <a class="button tab-b" onclick="openTab('articles')">Artikelen</a>
+                            <a class="button tab-b" onclick="openTab('articles')">Artikelen</a>                            
+                            <a class="button tab-b tab-small" href="addArticle.php">Artikel toevoegen</a>         
                             <a class="button tab-b" onclick="openTab('users')">Gebruikers</a>
                         <?php } ?>
 
@@ -38,7 +41,7 @@
                         <h2>Gegevens</h2>
                         <div id="userdata" class="block-50">
                             <?php
-                                $db->getAndEditUserData($_SESSION['user_id']);
+                                $db->getAndEditUserData($_SESSION['user_id'], $admin);
                             ?>
                         </div>
                     </div>

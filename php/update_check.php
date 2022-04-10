@@ -11,10 +11,10 @@
         $adress = $_POST['adress'];
         $postcode = $_POST['postcode'];
         $phone = $_POST['phone'];
-
+        $userlevel = $_POST['level'];
         $userid = $_POST['user_id'];
 
-        $userdata = array($email, $name, $surname, $adress, $postcode, $phone, $userid);
+        $userdata = array($email, $name, $surname, $adress, $postcode, $phone, $userlevel, $userid);
 
         $db->updateUserData($userdata);
     }

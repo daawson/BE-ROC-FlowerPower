@@ -3,9 +3,9 @@
     <body>
     <?php         
             include "php/header.php";            
-            if(isset($_SESSION) && $_SESSION["logged_in"] !== true){
-                header("location: index.php");
-            }
+            // if(isset($_SESSION) && $_SESSION["logged_in"] !== true){
+            //     header("location: index.php");
+            // }
             $article = $db->getArticle($_GET['id']);
         ?>
 

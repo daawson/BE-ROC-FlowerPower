@@ -12,6 +12,7 @@ class Database
         $this->dbh = new PDO('mysql:host='.$host.';dbname='.$db.';port='.$port, $user, $pass);
     }
 
+    // Logins the user.
     function loginUser($userdata){
         $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_email=:uid");
         $stmt->bindParam(':uid', $userdata[0], PDO::PARAM_STR);
@@ -46,6 +47,7 @@ class Database
         }
     }
 
+    // Registers user.
     function registerUser($userdata){
 
         $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_email=:uid");
@@ -66,6 +68,7 @@ class Database
         }
     }
 
+    // Returns order list.
     function getClientOrders($user_id){
         $stmt = $this->dbh->prepare("SELECT * FROM orders WHERE order_client_id=:uid");
         $stmt->bindParam(':uid', $user_id, PDO::PARAM_STR);
@@ -104,7 +107,8 @@ class Database
         }
     }
 
-    function getAndEditUserData($user_id){
+    // Gets and Form-ats chosen by ID values.
+    function getAndEditUserData($user_id, $admin){
         $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_id=:uid LIMIT 1");
         $stmt->bindParam(':uid', $user_id, PDO::PARAM_STR);                                
         $stmt->execute();
@@ -118,19 +122,38 @@ class Database
             echo "<br><p>Bezorg details</p><br>";
             echo "Adress<input min-length='4' max-length='128' pattern='^([1-9][e][\s])*([a-zA-Z]+(([\.][\s])|([\s]))?)+[1-9][0-9]*(([-][1-9][0-9]*)|([\s]?[a-zA-Z]+))?$' type='text' name='adress' id='adress' required value='".$userdata['user_adress']."'>";
             echo "Postcode<input max-length='7' placeholder='1234 AB' pattern='^([0-9]{4}[ ]+[a-zA-Z]{2})$' type='text' name='postcode' id='postcode' required value='".$userdata['user_postcode']."'>";
-            echo "<input type='hidden' id='user_id' name='user_id' value='".$_SESSION['user_id']."'>";
+            
+            if($admin == 1){
+                //echo "Toegang level<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='level' id='level' required value='".."'>";
+                echo "<select name='level' id='level'><option value='klant'"; 
+                    if($userdata['user_type'] == 'klant') echo 'selected';
+                    echo ">Klant</option>";
+                    echo "<option value='administrator'";
+                    if($userdata['user_type'] == 'administrator') echo 'selected'; 
+                    echo ">Administrator</option></select>";
+            }
+            else{
+                echo "<input type='hidden' id='level' name='level' value='".$userdata['user_type']."'>";
+            }
+
+            echo "<input type='hidden' id='user_id' name='user_id' value='".$user_id."'>";
             echo "<input type='submit' name='Submit' value='Opslaan'>";
         echo "</form>";
     }
 
+    // Updates user data.
     function updateUserData($userdata){
-        $stmt = $this->dbh->prepare("UPDATE user SET user_email=?, user_name=?, user_surname=?, user_adress=?, user_postcode=?, user_phone=? WHERE user_id=?");
+        $stmt = $this->dbh->prepare("UPDATE user SET user_email=?, user_name=?, user_surname=?, user_adress=?, user_postcode=?, user_phone=?, user_type=? WHERE user_id=?");
         if($stmt->execute($userdata)){
+            if($_SESSION['user_id'] == $userdata[7]){
+                $_SESSION['user_level'] = $userdata[6];
+            }
             header("location: ../userpage.php?msg=Uw gegevens zijn opgeslagen!");
+
         }
-        //header("location: ../userpage.php?msg=Uw gegevens zijn opgeslagen!");
     }
 
+    // Formats all articles into a display 'case';
     function getArticlesDisplay(){
         $stmt = $this->dbh->prepare("SELECT * FROM article");
         $stmt->execute();
@@ -153,6 +176,7 @@ class Database
         }
     }
 
+    // Gets and formats users into a table/list.
     function getArticlesList(){
         $stmt = $this->dbh->prepare("SELECT * FROM article");
         $stmt->execute();
@@ -161,17 +185,18 @@ class Database
         foreach($articles as $article){
             echo "<div class='table-item'>";
             echo "<div class='table-cell'>".$article['article_id'].'</div>';           
-            echo "<div class='table-cell'>". $article['article_name'] ."</div>"; 
+            echo "<div class='table-cell'><a href='article.php?id=". $article['article_id'] ."'>".$article['article_name']."</a></div>"; 
             // echo "<div class='table-cell'>". $article['article_desc'] ."</div>"; 
             echo "<div class='table-cell'>". $article['article_category'] ."</div>"; 
             echo "<div class='table-cell'>". $article['article_tags'] ."</div>"; 
             echo "<div class='table-cell'>". $article['article_price'] ."</div>";     
             echo "<div class='table-cell'>". $article['article_stock'] ."</div>";        
-            echo "<div class='table-cell'><b><a href='#'>Aanpassen</a></b></div>";
+            echo "<div class='table-cell'><b><a href='editArticle.php?id=".$article['article_id']."'>Aanpassen</a></b></div>";
             echo "</div>";
         }
     }
 
+    // Returns array of values of an selected by the id article.
     function getArticle($id){
         $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
         $stmt->bindParam(':uid', $id, PDO::PARAM_STR);                                
@@ -181,6 +206,7 @@ class Database
         return $article;
     }
 
+    // Gets and formats users into a table.
     function getUserList(){
         $stmt = $this->dbh->prepare("SELECT * FROM user");
         $stmt->execute();
@@ -192,11 +218,81 @@ class Database
             echo "<div class='table-cell'>".$user['user_name'].'</div>';  
             echo "<div class='table-cell'>".$user['user_surname'].'</div>';  
             echo "<div class='table-cell'>".$user['user_type'].'</div>';     
-            echo "<div class='table-cell'><b><a href='#'>Aanpassen</a></b></div>";
+            echo "<div class='table-cell'><b><a href='editUser.php?id=".$user['user_id']."'>Aanpassen</a></b></div>";
             echo "</div>";
         
         }
     }
+
+    // Returns the categories as option list.
+    // Needs a <select> tag before and after this function.
+    function getCategories(){
+        $stmt = $this->dbh->prepare("SELECT * FROM categories");
+        $stmt->execute();
+        $category = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($category as $c){
+            echo '<option value="'.$c['category'].'">'.$c['category'].'</option>';        
+        }
+    }
+
+    //Adds the article into the database.
+    function addArticle($articledata){
+        $stmt = $this->dbh->prepare("INSERT INTO article (article_name, article_desc, article_category, article_tags, article_photoDir, article_stock, article_price) VALUES (?,?,?,?,?,?,?)");
+        $stmt->execute($articledata);
+        
+        $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_name=:uid LIMIT 1");
+        $stmt->bindParam(':uid', $articledata[0], PDO::PARAM_STR);   
+        $stmt->execute();
+        $article = $stmt->fetch();
+
+        header("location: ../article.php?id=".$article['article_id']);
+
+    }
+
+    // Get and Form-at article data and fill it with values.
+    function getAndEditArticleData($article_id){
+        $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
+        $stmt->bindParam(':uid', $article_id, PDO::PARAM_STR);                                
+        $stmt->execute();
+        $articledata = $stmt->fetch();
+
+        echo "<form id='article-data' class='article-data' action='php/editArticle_check.php' method='POST'>";
+            echo "<a class='button tab-b tab-small' href='userpage.php'>Terug</a>";
+            echo "<h1>Artikel wijzigen</h1>";
+            echo "Naam<input type='text' name='article_name' id='article_name' value='".$articledata['article_name']."' required>";
+            echo "Omschrijving<textarea  rows='4' cols='50' name='article_desc' id='article_desc' required>". $articledata['article_desc']."</textarea>";
+            echo "Categorie<select name='article_category' id='article_category'>";
+            $this->getCategories(); 
+            echo "</select>";
+            echo "Tags<input type='text' name='article_tags' id='article_tags' value='".$articledata['article_tags']."' required>";
+            echo "Voorraad<input type='number' name='article_stock' id='article_stock' value='".$articledata['article_stock']."' required>";
+            echo "Prijs<input type='text' name='article_price' id='article_price' value='".$articledata['article_price']."' required>";
+            echo "<input type='hidden' name='article_id' id='article_id' value='".$articledata['article_id']."'>";
+            echo "<input type='submit' name='Submit' value='Opslaan'/>";
+            echo "<input type='submit' name='Submit' value='Verwijder'/>";
+        echo "</form>";
+    }
+
+    // Update the article
+    function updateArticleData($articledata){
+        $stmt = $this->dbh->prepare("UPDATE article SET article_name=?, article_desc=?, article_category=?, article_tags=?, article_stock=?, article_price=? WHERE article_id=?");
+        if($stmt->execute($articledata)){
+            header("location: ../userpage.php?msg=Artikel is opgeslagen!");
+
+        }
+    }
+
+    // Remove article from database by article_id
+    function removeArticle($article_id){
+        $stmt = $this->dbh->prepare("DELETE FROM article WHERE article_id=:uid");
+        $stmt->bindParam(':uid', $article_id, PDO::PARAM_INT);
+        if($stmt->execute()){
+            header("location: ../userpage.php?msg=Artikel is verwijderd!");
+
+        }
+    }
 }   
 
+// Creates the database instance.
 $db = new Database();

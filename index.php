@@ -10,7 +10,17 @@
                 <div class="block-50">
                 <img class="center-in-block small-img" src="img/flower_power_header_bouquet.png"/>
                     <h1>Flower Power</h1>
-                    <p>Lorem Ipsum dolor sit amet</p>
+                    <p>
+                        Morbi tristique senectus et netus et malesuada fames.
+                        Leo duis ut diam quam nulla. Morbi enim nunc faucibus a pellentesque sit amet.
+                        Tellus integer feugiat scelerisque varius morbi enim.
+                    </p><br>
+                    <p>
+                        Maecenas accumsan lacus vel facilisis volutpat est velit.
+                        Libero volutpat sed cras ornare arcu. In massa tempor nec feugiat nisl.
+                        Nisl condimentum id venenatis a condimentum vitae sapien. Arcu non sodales neque sodales ut.
+                        Elementum curabitur vitae nunc sed velit dignissim. 
+                    </p>
                 </div>
             </div>
             <div class="spacer"><h2>Onze assortiment</h2></div>
