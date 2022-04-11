@@ -13,8 +13,8 @@
         <div id="main-container">
             <div id="article-container">
                 <div class="block-50">
+                    <a class='button tab-b tab-small' href='userpage.php'>Terug</a>
                     <h1>Wijzig gebruiker gegevens</h1>
-                    <a class="button tab-b tab-small" href="userpage.php">Terug</a>
                     <?php $db->getAndEditUserData($_GET['id'], $admin); ?>
                 </div>                
             </div>

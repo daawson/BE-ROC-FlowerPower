@@ -115,6 +115,8 @@ class Database
         $userdata = $stmt->fetch();
 
         echo "<form id='userdata-table' class='userdata' action='php/update_check.php' method='POST'>";
+        
+            // echo "<a class='button tab-b tab-small' href='userpage.php'>Terug</a>";
             echo "Naam<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='name' id='name' required value='".$userdata['user_name']."'>";
             echo "Achternaam<input min-length='2' max-length='64' pattern=\"^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$\" type='text' name='surname' id='surname' required value='".$userdata['user_surname']."'>";
             echo "E-Mail<input min-length='6' max-length='64' pattern='^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$' type='email' name='email' id='email' required value='".$userdata['user_email']."'>";
@@ -189,9 +191,9 @@ class Database
             // echo "<div class='table-cell'>". $article['article_desc'] ."</div>"; 
             echo "<div class='table-cell'>". $article['article_category'] ."</div>"; 
             echo "<div class='table-cell'>". $article['article_tags'] ."</div>"; 
-            echo "<div class='table-cell'>". $article['article_price'] ."</div>";     
+            echo "<div class='table-cell'>€". $article['article_price'] ."</div>";     
             echo "<div class='table-cell'>". $article['article_stock'] ."</div>";        
-            echo "<div class='table-cell'><b><a href='editArticle.php?id=".$article['article_id']."'>Aanpassen</a></b></div>";
+            echo "<div class='table-cell'><b><a href='editArticle.php?id=".$article['article_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></div>";
             echo "</div>";
         }
     }
@@ -218,7 +220,7 @@ class Database
             echo "<div class='table-cell'>".$user['user_name'].'</div>';  
             echo "<div class='table-cell'>".$user['user_surname'].'</div>';  
             echo "<div class='table-cell'>".$user['user_type'].'</div>';     
-            echo "<div class='table-cell'><b><a href='editUser.php?id=".$user['user_id']."'>Aanpassen</a></b></div>";
+            echo "<div class='table-cell'><b><a href='editUser.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></div>";
             echo "</div>";
         
         }
