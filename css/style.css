@@ -47,7 +47,18 @@ b{
     font-size: 14px;
 }
 /* #endregion */
+/*#region Contact */
+.contact-img-small{
+    width: 400px;
+    height: 400px;
+}
 
+.fit-to-block{
+    width: 100%;
+    height: auto;
+    padding: 25px;
+}
+/* #endregion */
 /*#region Header */
 #header{
     width: 100%;
@@ -422,6 +433,11 @@ p.intro-text{
     justify-content: center;
     align-items: center;
     align-self: flex-end;
+}
+
+#footer p, #footer a{
+    margin: 10px;
+    font-size: 14px;
 }
 
 /*#endregion*/

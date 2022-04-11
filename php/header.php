@@ -10,7 +10,7 @@
         </div>
     </div>
     <div id="ui">
-        <a class="button-ui">Contact <i class="fa-solid fa-address-card"></i></a>
+        <a class="button-ui" href="contact.php">Contact <i class="fa-solid fa-address-card"></i></a>
         <?php 
             if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true){
                 echo '<a href="userpage.php" class="button-ui">Mijn Profiel <i class="fa-solid fa-users-gear"></i></a>';
