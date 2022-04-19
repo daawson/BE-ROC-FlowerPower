@@ -73,7 +73,7 @@
         {   if($uploadOk == 1)    {
                 $db->addArticle($articledata);
             }else{                    
-                header("location: ../addArticle.php?msg=Foto bestaand ");
+                header("location: ../addArticle.php?msg=Iets ging miss!");
             }
         }
      }

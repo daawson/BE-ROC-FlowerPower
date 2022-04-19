@@ -1,4 +1,5 @@
 <?php
+require 'shoppingcart.php';
 class Database
 {
     public $dbh;
@@ -35,7 +36,8 @@ class Database
                     $_SESSION['user_id'] = $row['user_id'];
                     $_SESSION['user_name'] = $row['user_name'];
                     $_SESSION['user_level'] = $row['user_type'];
-                    $_SESSION['logged_in'] = true;
+                    $_SESSION['logged_in'] = true;                    
+                    $_SESSION['cart'] = new Cart();    
                     header("location: ../index.php");
                     exit();
                 }
@@ -80,16 +82,18 @@ class Database
             echo "<p>Je hebt nog geen bestellingen!</p>";
         }
         else
-        {
+        {   
+            echo "<table class='data-table'><tr><th>Bestellingnummer</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th></tr>";
             foreach($orders as $o)
             {
                 $stmt = $this->dbh->prepare("SELECT * FROM order_item WHERE order_ref_id=:uid");
                 $stmt->bindParam(':uid', $o['order_id'], PDO::PARAM_STR);                                
                 $stmt->execute();
                 $order_item = $stmt->fetchAll(PDO::FETCH_ASSOC);  
-
-                echo "<div class='table-item'><div class='table-cell'>".$o['order_id'].'</div>';                                    
-                echo "<div class='table-cell'>";
+                
+                
+                echo "<tr><td>".$o['order_id']."</td>";
+                echo "<td>";
 
                 foreach($order_item as $oi){
                     $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
@@ -97,13 +101,18 @@ class Database
                     $stmt->execute();
                     $article = $stmt->fetch();
 
-                    echo $article['article_name']." x" . $oi['order_article_quantity'] . "<br>";
+                    if(isset($article['article_name']))
+                        echo $article['article_name']." x" . $oi['order_article_quantity'] . "<br>";
+                    else
+                        echo "Onbekende artikel x" . $oi['order_article_quantity'] . "<br>";
                 }
-
-                echo "</div><div class='table-cell'>€". $o['order_total'] ."</div>";
-                echo "<div class='table-cell'><b><a href='#'>Factuur bekijken</a></b></div>";
-                echo "<div class='table-cell'>".$o['order_status']."</div></div>";
+                echo "</td>";
+                echo "<td>€". $o['order_total'] ."</td>";
+                echo "<td><b><a href='#'>Factuur bekijken</a></b></td>";
+                echo "<td>".$o['order_status']."</td>";
+                echo "</tr>";
             }
+            echo "</table>";
         }
     }
 
@@ -183,19 +192,22 @@ class Database
         $stmt = $this->dbh->prepare("SELECT * FROM article");
         $stmt->execute();
         $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        echo "<table class='data-table'><tr><th>Article ID</th><th>Artikelnaam</th><th>Categorie</th><th>Tags</th><th>Prijs</th><th>Voorraad</th><th>Aanpassen</th></tr>";
         foreach($articles as $article){
-            echo "<div class='table-item'>";
-            echo "<div class='table-cell'>".$article['article_id'].'</div>';           
-            echo "<div class='table-cell'><a href='article.php?id=". $article['article_id'] ."'>".$article['article_name']."</a></div>"; 
+            
+            echo "<tr>";
+            echo "<td>".$article['article_id'].'</td>';           
+            echo "<td><a href='article.php?id=". $article['article_id'] ."'>".$article['article_name']."</a></td>"; 
             // echo "<div class='table-cell'>". $article['article_desc'] ."</div>"; 
-            echo "<div class='table-cell'>". $article['article_category'] ."</div>"; 
-            echo "<div class='table-cell'>". $article['article_tags'] ."</div>"; 
-            echo "<div class='table-cell'>€". $article['article_price'] ."</div>";     
-            echo "<div class='table-cell'>". $article['article_stock'] ."</div>";        
-            echo "<div class='table-cell'><b><a href='editArticle.php?id=".$article['article_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></div>";
-            echo "</div>";
+            echo "<td>". $article['article_category'] ."</td>"; 
+            echo "<td>". $article['article_tags'] ."</td>"; 
+            echo "<td>€". $article['article_price'] ."</td>";     
+            echo "<td>". $article['article_stock'] ."</td>";        
+            echo "<td><b><a href='editArticle.php?id=".$article['article_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";
+            echo "</tr>";            
+            
         }
+        echo "</table>";
     }
 
     // Returns array of values of an selected by the id article.
@@ -213,17 +225,17 @@ class Database
         $stmt = $this->dbh->prepare("SELECT * FROM user");
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        echo "<table class='data-table'><tr><th>Gebruiker ID</th><th>Naam</th><th>Achternaam</th><th>Level</th><th>Aanpassen</th></tr>";
         foreach($users as $user){
-            echo "<div class='table-item'>";
-            echo "<div class='table-cell'>".$user['user_id'].'</div>';   
-            echo "<div class='table-cell'>".$user['user_name'].'</div>';  
-            echo "<div class='table-cell'>".$user['user_surname'].'</div>';  
-            echo "<div class='table-cell'>".$user['user_type'].'</div>';     
-            echo "<div class='table-cell'><b><a href='editUser.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></div>";
-            echo "</div>";
-        
+            echo "<tr>";
+            echo "<td>".$user['user_id'].'</td>';   
+            echo "<td>".$user['user_name'].'</td>';  
+            echo "<td>".$user['user_surname'].'</td>';  
+            echo "<td>".$user['user_type'].'</td>';     
+            echo "<td><b><a href='editUser.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";            
+            echo "</tr>";
         }
+        echo "</table>";
     }
 
     // Returns the categories as option list.
@@ -259,7 +271,7 @@ class Database
         $stmt->execute();
         $articledata = $stmt->fetch();
 
-        echo "<form id='article-data' class='article-data' action='php/editArticle_check.php' method='POST'>";
+        echo "<form id='article-data' class='article-data' action='php/editArticle_check.php' method='POST' enctype='multipart/form-data'>";    
             echo "<a class='button tab-b tab-small' href='userpage.php'>Terug</a>";
             echo "<h1>Artikel wijzigen</h1>";
             echo "Naam<input type='text' name='article_name' id='article_name' value='".$articledata['article_name']."' required>";
@@ -267,10 +279,13 @@ class Database
             echo "Categorie<select name='article_category' id='article_category'>";
             $this->getCategories(); 
             echo "</select>";
+            // echo "<img src='".$articledata['article_photoDir']."'>";
+            echo "Foto<input type='file' name='article_photoDir' id='article_photoDir' value='".$articledata['article_photoDir']."' accept='image/png, image/jpeg, image/jpg' />";
             echo "Tags<input type='text' name='article_tags' id='article_tags' value='".$articledata['article_tags']."' required>";
             echo "Voorraad<input type='number' name='article_stock' id='article_stock' value='".$articledata['article_stock']."' required>";
             echo "Prijs<input type='text' name='article_price' id='article_price' value='".$articledata['article_price']."' required>";
-            echo "<input type='hidden' name='article_id' id='article_id' value='".$articledata['article_id']."'>";
+            echo "<input type='hidden' name='article_id' id='article_id' value='".$articledata['article_id']."'>";            
+            echo "<input type='hidden' name='article_firstPhotoDir' id='article_firstPhotoDir' value='".$articledata['article_photoDir']."'>";
             echo "<input type='submit' name='Submit' value='Opslaan'/>";
             echo "<input type='submit' name='Submit' value='Verwijder'/>";
         echo "</form>";
@@ -278,7 +293,7 @@ class Database
 
     // Update the article
     function updateArticleData($articledata){
-        $stmt = $this->dbh->prepare("UPDATE article SET article_name=?, article_desc=?, article_category=?, article_tags=?, article_stock=?, article_price=? WHERE article_id=?");
+        $stmt = $this->dbh->prepare("UPDATE article SET article_name=?, article_desc=?, article_category=?, article_tags=?, article_photoDir=?, article_stock=?, article_price=? WHERE article_id=?");
         if($stmt->execute($articledata)){
             header("location: ../userpage.php?msg=Artikel is opgeslagen!");
 

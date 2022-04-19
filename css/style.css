@@ -95,7 +95,6 @@ b{
 }
 #header-cart-container i{
     font-size: 32px;
-    margin-right: 50;
 }
 #ui{
     width: 100%;
@@ -380,27 +379,40 @@ p.intro-text{
     height: 40px;
 }
 
-/* Bestellingen */
+/* Tables */
 
-.table-item{
-    display: flex;
+.data-table{
     width: 100%;
-    height: auto;
-    flex-direction: row;
-    margin: 10 0;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
 }
 
-.table-cell{
-    width: 20%;
+.data-table tr th, .data-table tr td{
+    border: 1px solid #246;;
+    margin: 10px;
     padding: 10px;
-    border: 1px solid black;
+}
+
+/* Cart count */
+#header-cart-container a{
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    margin: 100;
 }
-
-
+.header-cart-container a i{
+    margin: 100;
+}
+.cart-count{
+    padding: 10px;
+    font-size: 16px;
+    background-color: #224466;
+    color: white;
+    margin: 10px;
+    height: 38px;
+    border-radius: 20px;
+}
 /*#endregion */
 
 /*#region User data */

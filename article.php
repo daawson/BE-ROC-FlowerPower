@@ -21,7 +21,8 @@
                         echo "<h1>".$article['article_name']."</h1>";
                         echo "<p>".$article['article_desc']."</p>";
                         echo "<b>€".$article['article_price']."</b>";
-                        echo "<div class='cart-button'>In winkelwagen</div>";
+                        echo "<input min-value='1' max-value='".$article['article_stock']."' type='number' value='1'>";
+                        echo "<a class='cart-button' href='php/editCart.php?add=".$article['article_id']."'>In winkelwagen</a>";
                     ?>
                 </div>
             </div>

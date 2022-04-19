@@ -1,12 +1,19 @@
 <?php       
-    require_once("php/database.php");         
-    include("php/session.php");
+    //require_once("php/shoppingcart.php");  
+    require_once("php/database.php");
+    require_once("php/session.php");    
 ?>
 <div id="header">
     <div id="header-top-container">
         <a href="index.php" ><img src="img/flower_power_logo_purple.png" id="logo"></img></a>
         <div id="header-cart-container">
-            <a href="cart.php"><i class="fa-solid fa-basket-shopping"></i></a>
+            <a href="cart.php"><i class="fa-solid fa-basket-shopping"></i>
+                <?php 
+                    if(isset($_SESSION['cart'])){
+                        echo "<p class='cart-count'>".$_SESSION['cart']->GetCartCount()."</p>"; 
+                    }
+                ?>
+            </a>
         </div>
     </div>
     <div id="ui">
