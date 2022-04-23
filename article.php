@@ -19,10 +19,22 @@
                 <div class="block-50">
                     <?php
                         echo "<h1>".$article['article_name']."</h1>";
-                        echo "<p>".$article['article_desc']."</p>";
+                        echo "<p>".$article['article_desc']."</p>";                        
+                        echo "<b>Voorraad: ".$article['article_stock']."</b>";
                         echo "<b>€".$article['article_price']."</b>";
-                        echo "<input min-value='1' max-value='".$article['article_stock']."' type='number' value='1'>";
-                        echo "<a class='cart-button' href='php/editCart.php?add=".$article['article_id']."'>In winkelwagen</a>";
+                        if($_SESSION['cart']->HasItemInCart($article['article_id'])) {                            
+                            echo "<a class='cart-button unavailable' href='cart.php'>Al in winkelwagen</a>";
+                        }
+                        else if($article['article_stock'] != 0){
+                            echo "<form method='POST' action='php/editCart.php' class='cart-box'><br>";
+                            echo "Aantal<input min='1' name='a_quantity' id='a_quantity' max='".$article['article_stock']."' type='number' value='1'>";
+                            echo "<input type='hidden' name='a_id' id='a_id' value='".$article['article_id']."'>";
+                            echo "<input type='submit' class='cart-button' name='Submit' value='in Winkelwagen'>";
+                            echo "</form>";
+                        }
+                        else{
+                            echo "<div class='cart-button unavailable'>Niet beschikbaar</div>";
+                        }
                     ?>
                 </div>
             </div>

@@ -26,7 +26,7 @@
     }
 
     // Check file size
-    if ($_FILES["article_photoDir"]["size"] > 500000) {
+    if ($_FILES["article_photoDir"]["size"] > 2000000) {
         $errorMsg = "Sorry, your file is too large.";
         $uploadOk = 0;
     }
@@ -40,7 +40,7 @@
 
     // Check if $uploadOk is set to 0 by an error
     if ($uploadOk == 0) {
-        $errorMsg = "Sorry, your file was not uploaded.";
+        //$errorMsg = "Sorry, your file was not uploaded.";
         } else {
         if (move_uploaded_file($_FILES["article_photoDir"]["tmp_name"], $target_file)) {
             echo "The file ". htmlspecialchars( basename( $_FILES["article_photoDir"]["name"])). " has been uploaded.";
@@ -66,14 +66,14 @@
         // Return if fields were empty.
         if (empty($articledata)) 
         {
-            header("location: ../addArticle.php?msg=Iets ging miss!");
+            header("location: ../addArticle.php?msg=Iets ging miss!".$errorMsg);
             exit();
         }   
         else    
         {   if($uploadOk == 1)    {
                 $db->addArticle($articledata);
             }else{                    
-                header("location: ../addArticle.php?msg=Iets ging miss!");
+                header("location: ../addArticle.php?msg=".$errorMsg);
             }
         }
      }

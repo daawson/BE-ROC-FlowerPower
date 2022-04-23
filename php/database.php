@@ -83,7 +83,7 @@ class Database
         }
         else
         {   
-            echo "<table class='data-table'><tr><th>Bestellingnummer</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th></tr>";
+            echo "<table class='data-table'><tr><th>#</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th></tr>";
             foreach($orders as $o)
             {
                 $stmt = $this->dbh->prepare("SELECT * FROM order_item WHERE order_ref_id=:uid");
@@ -192,7 +192,7 @@ class Database
         $stmt = $this->dbh->prepare("SELECT * FROM article");
         $stmt->execute();
         $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo "<table class='data-table'><tr><th>Article ID</th><th>Artikelnaam</th><th>Categorie</th><th>Tags</th><th>Prijs</th><th>Voorraad</th><th>Aanpassen</th></tr>";
+        echo "<table class='data-table'><tr><th>Artikel ID</th><th>Artikelnaam</th><th>Categorie</th><th>Tags</th><th>Prijs</th><th>Voorraad</th><th>Aanpassen</th></tr>";
         foreach($articles as $article){
             
             echo "<tr>";
@@ -225,13 +225,14 @@ class Database
         $stmt = $this->dbh->prepare("SELECT * FROM user");
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo "<table class='data-table'><tr><th>Gebruiker ID</th><th>Naam</th><th>Achternaam</th><th>Level</th><th>Aanpassen</th></tr>";
+        echo "<table class='data-table'><tr><th>Gebruiker ID</th><th>Naam</th><th>Achternaam</th><th>Level</th><th>Bestellingen</th><th>Aanpassen</th></tr>";
         foreach($users as $user){
             echo "<tr>";
             echo "<td>".$user['user_id'].'</td>';   
             echo "<td>".$user['user_name'].'</td>';  
             echo "<td>".$user['user_surname'].'</td>';  
-            echo "<td>".$user['user_type'].'</td>';     
+            echo "<td>".$user['user_type'].'</td>';   
+            echo "<td><b><a href='#'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";     
             echo "<td><b><a href='editUser.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";            
             echo "</tr>";
         }
@@ -309,6 +310,33 @@ class Database
 
         }
     }
+
+    function placeOrder($user_id, $cart){
+        $t = date('Y-m-d H:i:s');
+        $stmt = $this->dbh->prepare("INSERT INTO orders (order_client_id, order_date, order_total, order_status) VALUES (?,?,?,?)");
+        $orderdata = array($user_id, $t, $cart->cart_totalPrice, "Betaald");
+        $stmt->execute($orderdata);
+        $last_id = $this->dbh->lastInsertId();
+
+        foreach($cart->cart_items as $item){
+            $stmt = $this->dbh->prepare("INSERT INTO order_item (order_ref_id, order_article_id, order_article_quantity) VALUES (?,?,?)");
+            $order_itemdata = array($last_id, $item->article_id, $item->article_quantity);
+            $stmt->execute($order_itemdata);
+
+            $article = $this->getArticle($item->article_id);
+            $newstock = $article['article_stock'] - $item->article_quantity;
+            $stmt = $this->dbh->prepare("UPDATE article SET article_stock=? WHERE article_id=?");        
+            $updated_articledata = array($newstock, $item->article_id);
+            $stmt->execute($updated_articledata);
+            
+        }
+
+        
+
+        $cart->ClearCart();
+        header( "refresh:3;url=userpage.php" );
+    }
+
 }   
 
 // Creates the database instance.

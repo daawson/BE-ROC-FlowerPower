@@ -7,4 +7,5 @@ function openTab(tabname) {
     }
 
     document.getElementById(tabname).style.display = "block";  
+    if(tabname == 'cart') document.getElementById(tabname).style.display = "flex";  
 }
