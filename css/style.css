@@ -203,6 +203,12 @@ p.intro-text{
 .flex-top-down{
     justify-content: flex-start;
 }
+.flex-to-left{
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
 
 .flex-center-content{
     justify-content: center;

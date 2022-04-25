@@ -79,7 +79,7 @@ class Database
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if(sizeof($orders) == 0)
         {
-            echo "<p>Je hebt nog geen bestellingen!</p>";
+            echo "<p>Er zijn nog geen bestellingen!</p>";
         }
         else
         {   
@@ -108,7 +108,7 @@ class Database
                 }
                 echo "</td>";
                 echo "<td>€". $o['order_total'] ."</td>";
-                echo "<td><b><a href='#'>Factuur bekijken</a></b></td>";
+                echo "<td><b><a href='img/factuur_placeholder.png' target='_blank'>Factuur bekijken</a></b></td>";
                 echo "<td>".$o['order_status']."</td>";
                 echo "</tr>";
             }
@@ -150,6 +150,16 @@ class Database
             echo "<input type='hidden' id='user_id' name='user_id' value='".$user_id."'>";
             echo "<input type='submit' name='Submit' value='Opslaan'>";
         echo "</form>";
+    }
+
+    //Returns user data
+    function getUserData($id){
+        $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_id=:uid LIMIT 1");
+        $stmt->bindParam(':uid', $id, PDO::PARAM_STR);                                
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        return $user;
     }
 
     // Updates user data.
@@ -232,7 +242,7 @@ class Database
             echo "<td>".$user['user_name'].'</td>';  
             echo "<td>".$user['user_surname'].'</td>';  
             echo "<td>".$user['user_type'].'</td>';   
-            echo "<td><b><a href='#'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";     
+            echo "<td><b><a href='orders.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";     
             echo "<td><b><a href='editUser.php?id=".$user['user_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";            
             echo "</tr>";
         }

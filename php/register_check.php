@@ -13,7 +13,7 @@
         $postcode = $_POST['postcode'];
         $phone = $_POST['phone'];
 
-        $userdata = array($email, $password, $name, $surname, $adress, $postcode, $phone, "klant");
+        $userdata = array($email, $password, $name, $surname, $phone, $adress, $postcode, "klant");
 
         $db->registerUser($userdata);
     }
