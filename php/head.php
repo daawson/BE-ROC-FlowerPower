@@ -1,4 +1,5 @@
 <head>
+    <title>Flower Power</title>
     <link href="css/style.css" rel="stylesheet"> </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

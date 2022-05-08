@@ -22,7 +22,7 @@
 
                         <?php if($_SESSION['user_level'] == "administrator"){ ?>
                             <a class="button tab-b" onclick="openTab('articles')">Artikelen</a>                            
-                            <a class="button tab-b tab-small" href="addArticle.php">Artikel toevoegen</a>         
+                            <a class="button tab-b" href="addArticle.php">Artikel toevoegen</a>         
                             <a class="button tab-b" onclick="openTab('users')">Gebruikers</a>     
                             <a class="button tab-b" onclick="openTab('all_orders')">Alle bestellingen</a>
                         <?php } ?>
