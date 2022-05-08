@@ -23,7 +23,8 @@
                         <?php if($_SESSION['user_level'] == "administrator"){ ?>
                             <a class="button tab-b" onclick="openTab('articles')">Artikelen</a>                            
                             <a class="button tab-b tab-small" href="addArticle.php">Artikel toevoegen</a>         
-                            <a class="button tab-b" onclick="openTab('users')">Gebruikers</a>
+                            <a class="button tab-b" onclick="openTab('users')">Gebruikers</a>     
+                            <a class="button tab-b" onclick="openTab('all_orders')">Alle bestellingen</a>
                         <?php } ?>
 
                     </div>
@@ -62,6 +63,15 @@
                             <div id="users" class="block-full flex-dir-col flex-top-down">
                                 <?php
                                     $db->getUserList();
+                                ?>
+                            </div>
+                        </div>
+
+                        <div id="all_orders" class="tab-data" style="display:none">
+                            <h2>Alle bestellingen</h2>
+                            <div id="users" class="block-full flex-dir-col flex-top-down">
+                                <?php
+                                    $db->GetAllOrders();
                                 ?>
                             </div>
                         </div>

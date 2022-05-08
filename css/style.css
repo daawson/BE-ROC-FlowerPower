@@ -22,7 +22,7 @@ body{
     height: auto;
     background-color: white;
 	color: #990099;
-    box-shadow: rgba(34, 68, 102, 0.248) 0px 0px 1px 1px
+    box-shadow: rgb(34 68 102 / 25%) 0px 0px 20px 5px;
 }
 
 /*#region Text definitions*/
@@ -237,7 +237,7 @@ p.intro-text{
     height: auto;
 }
 .medium-img{
-    width: 70%;
+    width: 60%;
     height: auto;
 }
 
@@ -252,14 +252,15 @@ p.intro-text{
     overflow: hidden;   
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: flex-start;    
     background-color: #ffffff;
 }
 .article-box{
     padding: 10px;
     margin: 10px;
-    width: 15%;
+    width: 31%;
     height: 350px;
     display: flex;
     flex-direction: column;
@@ -430,6 +431,12 @@ p.intro-text{
     background-color: rgb(205, 205, 205);
 }
 
+#edit_order{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
 /* Cart count */
 #header-cart-container a{
     display: flex;
@@ -500,6 +507,7 @@ p.intro-text{
 #footer p, #footer a{
     margin: 10px;
     font-size: 14px;
+    color: white;
 }
 
 /*#endregion*/

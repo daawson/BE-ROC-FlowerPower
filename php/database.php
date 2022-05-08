@@ -83,7 +83,9 @@ class Database
         }
         else
         {   
-            echo "<table class='data-table'><tr><th>#</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th></tr>";
+            echo "<table class='data-table'><tr><th>#</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th>";
+            
+            echo "</tr>";
             foreach($orders as $o)
             {
                 $stmt = $this->dbh->prepare("SELECT * FROM order_item WHERE order_ref_id=:uid");
@@ -113,6 +115,106 @@ class Database
                 echo "</tr>";
             }
             echo "</table>";
+        }
+    }
+
+    function GetAllOrders(){
+        $stmt = $this->dbh->prepare("SELECT * FROM orders");
+        $stmt->execute();
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if(sizeof($orders) == 0)
+        {
+            echo "<p>Er zijn nog geen bestellingen!</p>";
+        }
+        else
+        {   
+            echo "<table class='data-table'><tr><th>#</th><th>Besteller</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th><th>Aanpassen</th></tr>";
+            foreach($orders as $o)
+            {
+                $stmt = $this->dbh->prepare("SELECT * FROM order_item WHERE order_ref_id=:uid");
+                $stmt->bindParam(':uid', $o['order_id'], PDO::PARAM_STR);                                
+                $stmt->execute();
+                $order_item = $stmt->fetchAll(PDO::FETCH_ASSOC);  
+                
+                $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_id=:uid");
+                $stmt->bindParam(':uid', $o['order_client_id'], PDO::PARAM_STR);  
+                $stmt->execute();
+                $client = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                echo "<tr><td>".$o['order_id']."</td>";
+                echo "<td>".$client['user_name']." ".$client['user_surname']."</td>";
+                echo "<td>";
+
+                foreach($order_item as $oi){
+                    $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
+                    $stmt->bindParam(':uid', $oi['order_article_id'], PDO::PARAM_STR);                                
+                    $stmt->execute();
+                    $article = $stmt->fetch();
+
+                    if(isset($article['article_name']))
+                        echo $article['article_name']." x" . $oi['order_article_quantity'] . "<br>";
+                    else
+                        echo "Onbekende artikel x" . $oi['order_article_quantity'] . "<br>";
+                }
+                echo "</td>";
+                echo "<td>€". $o['order_total'] ."</td>";
+                echo "<td><b><a href='img/factuur_placeholder.png' target='_blank'>Factuur bekijken</a></b></td>";
+                echo "<td>".$o['order_status']."</td>";
+                echo "<td><b><a href='editOrder.php?id=".$o['order_id']."'><i class='fa-solid fa-pen-to-square'></i></a></b></td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+    }
+
+
+    function GetAndEditOrder($order_id){
+        $stmt = $this->dbh->prepare("SELECT * FROM orders WHERE order_id=:uid");
+        $stmt->bindParam(':uid', $order_id, PDO::PARAM_STR);                                
+        $stmt->execute();
+        $o = $stmt->fetch(PDO::FETCH_ASSOC);  
+
+        echo "<table class='data-table'><tr><th>#</th><th>Besteller</th><th>Artikelen</th><th>Totaal prijs</th><th>Factuur</th><th>Status</th></tr>";
+
+        $stmt = $this->dbh->prepare("SELECT * FROM order_item WHERE order_ref_id=:uid");
+        $stmt->bindParam(':uid', $o['order_id'], PDO::PARAM_STR);                                
+        $stmt->execute();
+        $order_item = $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        
+        $stmt = $this->dbh->prepare("SELECT * FROM user WHERE user_id=:uid");
+        $stmt->bindParam(':uid', $o['order_client_id'], PDO::PARAM_STR);  
+        $stmt->execute();
+        $client = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo "<tr><td>".$o['order_id']."</td>";
+        echo "<td>".$client['user_name']." ".$client['user_surname']."</td>";
+        echo "<td>";
+
+        foreach($order_item as $oi){
+            $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
+            $stmt->bindParam(':uid', $oi['order_article_id'], PDO::PARAM_STR);                                
+            $stmt->execute();
+            $article = $stmt->fetch();
+
+            if(isset($article['article_name']))
+                echo $article['article_name']." x" . $oi['order_article_quantity'] . "<br>";
+            else
+                echo "Onbekende artikel x" . $oi['order_article_quantity'] . "<br>";
+        }
+
+        echo "</td>";
+        echo "<td>€". $o['order_total'] ."</td>";
+        echo "<td><b><a href='img/factuur_placeholder.png' target='_blank'>Factuur bekijken</a></b></td>";
+        echo "<td>".$o['order_status']."</td>";
+        echo "</tr>";
+        echo "</table>";
+    }
+
+    function updateOrder($data){
+        $stmt = $this->dbh->prepare("UPDATE orders SET order_status=? WHERE order_id=?");
+        if($stmt->execute($data)){     
+            header("location: ../userpage.php?msg=Order is geupdated!");
         }
     }
 
