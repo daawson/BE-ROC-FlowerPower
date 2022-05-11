@@ -22,7 +22,8 @@
                         echo "<p>".$article['article_desc']."</p>";                        
                         echo "<b>Voorraad: ".$article['article_stock']."</b>";
                         echo "<b>€".$article['article_price']."</b>";
-                        if($_SESSION['cart']->HasItemInCart($article['article_id'])) {                            
+                        if(isset($_SESSION['cart']))
+                            if($_SESSION['cart']->HasItemInCart($article['article_id'])) {                            
                             echo "<a class='cart-button unavailable' href='cart.php'>Al in winkelwagen</a>";
                         }
                         else if($article['article_stock'] != 0){

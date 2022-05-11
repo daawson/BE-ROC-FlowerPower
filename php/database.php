@@ -367,13 +367,15 @@ class Database
     function addArticle($articledata){
         $stmt = $this->dbh->prepare("INSERT INTO article (article_name, article_desc, article_category, article_tags, article_photoDir, article_stock, article_price) VALUES (?,?,?,?,?,?,?)");
         $stmt->execute($articledata);
-        
-        $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_name=:uid LIMIT 1");
-        $stmt->bindParam(':uid', $articledata[0], PDO::PARAM_STR);   
-        $stmt->execute();
-        $article = $stmt->fetch();
+        $id = $this->dbh->lastInsertId();
 
-        header("location: ../article.php?id=".$article['article_id']);
+        // $stmt = $this->dbh->prepare("SELECT * FROM article WHERE article_id=:uid LIMIT 1");
+        // $stmt->bindParam(':uid', $id, PDO::PARAM_STR);   
+        // $stmt->execute();
+        // $article = $stmt->fetch();
+        // header("location: ../article.php?id=".$article['article_id']);
+        
+        header("location: ../article.php?id=".$id);
 
     }
 

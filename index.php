@@ -18,13 +18,13 @@
             <div id="article_display">
                 <?php $db->getArticlesDisplay() ?>
             </div>
-            <div class="spacer"><h2 class="intro-header">Wil je meer over ons weten?</h2></div>
+            <div class="spacer"><h2 class="intro-header">Flower Power</h2></div>
             <div id="intro">
                     <div class="block-50">
                     <img class="round-img medium-img"src="img/flower_power_intro_header.png"/>
                     </div>
                 <div class="block-50 flex-center-content">
-                    <h1 class="intro-header">Flower Power</h1>
+                    <h1 class="intro-header">Wil je meer over ons weten?</h1>
                     <p class="intro-text">
                         Neem <a style='font-size: 24px; ' href='contact.php'>Contact</a> met ons op!
                     </p>
