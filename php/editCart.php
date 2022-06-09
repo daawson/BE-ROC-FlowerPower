@@ -1,5 +1,5 @@
 <?php
-    require 'database.php"';
+    require 'database.php';
     require 'session.php';
 
     if(isset($_POST['Submit'])){

@@ -1,15 +1,16 @@
 <?php
+include(__DIR__ . "/../../config.php");
 require 'shoppingcart.php';
 class Database
 {
     public $dbh;
 
     function __construct() {
-        $host = 'localhost';
+        $host = DB_HOST;
         $port = '3306';
-        $user = 'root';
-        $pass = '';
-        $db = 'flowerpower';
+        $user = DB_USERNAME;
+        $pass = DB_PASS;
+        $db = DB_DATABASE;
         $this->dbh = new PDO('mysql:host='.$host.';dbname='.$db.';port='.$port, $user, $pass);
     }
 
